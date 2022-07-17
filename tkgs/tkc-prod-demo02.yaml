@@ -1,0 +1,42 @@
+apiVersion: run.tanzu.vmware.com/v1alpha1
+kind: TanzuKubernetesCluster
+metadata:
+  name: prod-demo02
+  namespace: prod
+spec:
+  topology:
+    controlPlane:
+      count: 1
+      class: best-effort-medium
+      storageClass: k8s-policy
+      volumes:
+        - name: etcd
+          mountPath: /var/lib/etcd
+          capacity:
+            storage: 50Gi
+        - name: containerd
+          mountPath: /var/lib/containerd
+          capacity:
+            storage: 50Gi
+    workers:
+      count: 1
+      class: best-effort-medium
+      storageClass: k8s-policy
+      volumes:
+        - name: containerd
+          mountPath: /var/lib/containerd
+          capacity:
+            storage: 100Gi
+  distribution:
+    version: 1.21.6
+  settings:
+    storage: #optional storage settings
+      classes: [ "k8s-policy" ]
+      defaultClass: k8s-policy
+    network:
+      cni:
+        name: antrea
+      services:
+        cidrBlocks: ["172.24.0.0/16"]
+      pods:
+        cidrBlocks: ["172.25.0.0/16"]
