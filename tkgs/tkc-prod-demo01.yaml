@@ -19,7 +19,7 @@ spec:
           capacity:
             storage: 50Gi
     workers:
-      count: 1
+      count: 2
       class: best-effort-large
       storageClass: k8s-policy
       volumes:
