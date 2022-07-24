@@ -94,7 +94,7 @@ Demo 环境包含一个 vSphere 集群 和 github 的一个 repository，其中
 
 ### 4.1 在Supervisor Cluster 中创建基于 X509 证书，并且通过 RBAC 授权 cluster-admin 的权限
 
-首先要说明一下，Supervisor Cluster 不是一个 CNCF-Conformance 的 K8s 集群，而且通过通常的步骤无法获得集群管理员权限，我们需要通过一些特别的方法，登录到 Supervisor Cluster Control Plane VM 获取最高权限。具体可以参看 https://williamlam.com/2020/10/how-to-ssh-to-tanzu-kubernetes-grid-tkg-cluster-in-vsphere-with-tanzu.html，参考文中的 Option2 的 Step1 和 Step2。 在登录到 Supervisor Cluster Control Plane VM 的 shell console 之后，我们执行下面的步骤。 **注意，下面的所有的操作都是 Supervisor Cluster Control Plane VM 的 shell console 中。 **
+首先要说明一下，Supervisor Cluster 不是一个 CNCF-Conformance 的 K8s 集群，而且通过通常的步骤无法获得集群管理员权限，我们需要通过一些特别的方法，登录到 Supervisor Cluster Control Plane VM 获取最高权限。具体可以参看 https://williamlam.com/2020/10/how-to-ssh-to-tanzu-kubernetes-grid-tkg-cluster-in-vsphere-with-tanzu.html。 参考文中的 Option2 的 Step1 和 Step2。 在登录到 Supervisor Cluster Control Plane VM 的 shell console 之后，我们执行下面的步骤。 **注意，下面的所有的操作都是 Supervisor Cluster Control Plane VM 的 shell console 中。 **
 
 #### 4.1.1 通过 openssl 命令创建 argocd-admin 用户的私钥和 CSR
 ``` bash
@@ -292,9 +292,9 @@ prod-demo01   1               1        v1.21.6---vmware.1-tkg.1.b3d708a   19m   
 本文主要利用 GitOps 的方法，基于 K8s Cluster API，对 K8s 集群进行生命周期管理。 本方式，对于运维人员来说，K8s 集群生命周期管理更加规范，也更加方便。 本文的后半段篇幅主要讲述了基于 Tanzu Kubernetes Grid 的实现方式。 
 
 ## 6. 参考资料
-https://www.infracloud.io/blogs/multicluster-gitops-argocd/
-https://argo-cd.readthedocs.io/en/stable/getting_started/
-https://medium.com/swlh/how-we-effectively-managed-access-to-our-kubernetes-cluster-38821cf24d57
+- https://www.infracloud.io/blogs/multicluster-gitops-argocd/
+- https://argo-cd.readthedocs.io/en/stable/getting_started/
+- https://medium.com/swlh/how-we-effectively-managed-access-to-our-kubernetes-cluster-38821cf24d57
 
 
 
