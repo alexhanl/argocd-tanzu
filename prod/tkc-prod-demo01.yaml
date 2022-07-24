@@ -19,7 +19,7 @@ spec:
           capacity:
             storage: 50Gi
     workers:
-      count: 2
+      count: 1
       class: best-effort-large
       storageClass: k8s-policy
       volumes:
@@ -30,7 +30,7 @@ spec:
   distribution:
     version: 1.21.6
   settings:
-    storage: #optional storage settings
+    storage: 
       classes: [ "k8s-policy" ]
       defaultClass: k8s-policy
     network:
