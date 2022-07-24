@@ -54,13 +54,13 @@ kubectl apply -f tkgs-cluster-1.yaml
 ## 3. Why not GitOps? 
 GitOps 近年来大火。 越来越多的应用运维人员采用 code （YAML/Json 格式) 描述应用状态，使用 Git repository （GitHub/Gitlab 等）保存相应的YAML/Json文件。 并且通过 Git 流程（比如 Branch 的管理，Pull/Merge Request，Tag 等）完善了变更流程。 GitOps 有很多的优势，比如：
 
-- 申明式管理和Single Source of Truth: 通过查看 git 存储库，管理员就可以准确了解集群中正在运行的内容
-- 方便 Review 和 审计：对任何配置的变更都需要通过创建 Pull Request，并且经过预设的 review 流程，才能正式合并到相应的 branch。日后的审计也变得更加容易，因为每个更改都是 Git 中的一个 commit。
-- 方便回滚: 一旦发现出现问题，状态的回滚可以通过剔除之前有问题的commit即可，通过声明式管理的方式，系统会自动恢复到之前的状态。 
-- 配置可观测性：当运行环境配置被人为修改之后，可以通过比较当前配置和 Git repository中的配置，可以很快的发现配置漂移（configuration drifting），如果需要，可以自动纠正。 
-- 变更更加方便：GitOps 通常采取 pull 的方式。 管理员只需要修改 Git Repository 中的配置文件，GitOps 平台会自动 pull 这些变更，对比与实际环境配置的差异，然后修改实际运行环境的配置。 
+- **申明式管理和 Single Source of Truth**: 通过查看 git 存储库，管理员就可以准确了解集群中正在运行的内容
+- **方便 Review 和 审计**：对任何配置的变更都需要通过创建 Pull Request，并且经过预设的 review 流程，才能正式合并到相应的 branch。日后的审计也变得更加容易，因为每个更改都是 Git 中的一个 commit。
+- **方便回滚**: 一旦发现出现问题，状态的回滚可以通过剔除之前有问题的commit即可，通过声明式管理的方式，系统会自动恢复到之前的状态。 
+- **配置可观测性**：当运行环境配置被人为修改之后，可以通过比较当前配置和 Git repository中的配置，可以很快的发现配置漂移（configuration drifting），如果需要，可以自动纠正。 
+- **变更更加方便**：GitOps 通常采取 pull 的方式。 管理员只需要修改 Git Repository 中的配置文件，GitOps 平台会自动 pull 这些变更，对比与实际环境配置的差异，然后修改实际运行环境的配置。 
 
-在前文中，我们已经提到，Cluster API 中的 Kubernetes 集群的生命周期管理方式，与原生的 Kubernetes 资源，比如 Deployment 的生命周期管理方式，并无本质差异。 当K8s平台管理员使用 GitOps + Cluster API 实现 K8s 集群的生命周期管理时，GitOps 的这些收益一样可以获得。 
+在前文中，我们已经提到，Cluster API 中的 Kubernetes 集群的生命周期管理方式，与原生的 Kubernetes 资源，比如 Deployment 的生命周期管理方式，并无本质差异。 当 K8s 平台管理员使用 GitOps + Cluster API 实现 K8s 集群的生命周期管理时，GitOps 的这些收益一样可以获得。 
 
 开源社区有很多的工具，帮助实现 GitOps，比如 ArgoCD。 下图介绍如何通过 ArgoCD + GitHub + vSphere 7.0 实现 Tanzu Kuberentes 集群的生命周期管理。 
 
@@ -295,9 +295,3 @@ prod-demo01   1               1        v1.21.6---vmware.1-tkg.1.b3d708a   19m   
 - https://www.infracloud.io/blogs/multicluster-gitops-argocd/
 - https://argo-cd.readthedocs.io/en/stable/getting_started/
 - https://medium.com/swlh/how-we-effectively-managed-access-to-our-kubernetes-cluster-38821cf24d57
-
-
-
-
-
-
