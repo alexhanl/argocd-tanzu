@@ -1,24 +1,23 @@
 # 基于 K8s Cluster API 和 GitOps 的 Tanzu K8s 集群生命周期管理
 
-
 ## 1. 为何你需要 Cluster API 去管理 K8s 集群生命周期？
 
 所谓 K8s 集群生命周期管理，简单的说，就是 create, scale, upgrade, destroy。 从传统 IT 资源生命周期管理的视角来看，管理 K8s 集群与管理其他 IT 资源并无特别的差异，无非就是换了一个命令或者一个 Web 用户界面。 Kubeadm 为绝大部分的 K8s 管理平台提供了通用的底层工具，主要用来创建（bootstrap） K8s 集群。 但在日常的运维中，管理员依然会面临如下的一些问题，比如： 1. 如何在异构的 K8s 集群管理平台上，提供一致性的方法去部署 worker nodes，VPC 网络，负载均衡等资源？ 2. 如何实现 K8s 自动化生命周期管理，比如 K8s 版本的升级，节点规格的变更，节点数量的变更等？
 
 针对于以上的问题，Kubernetes 官方社区有个叫 sig-cluster-lifecycle 的特别兴趣小组（SIG），他们提出了一个统一的 K8s 集群管理方式，叫做 Cluster API。 Cluster API 最大的特点就是基于声明式的管理方式，使用 K8s 管理 K8s。 这个里面信息量稍微有点大，有三个要点：
 
-1. 声明式： 声明式的特点就是用户只说明需要最终的状态，至于如何从当前状态到达最终状态，由平台实现。其实就是所谓的 Infrastructure as the code 的概念。 稍后我们会看一下 Tanzu Kubernetes Grid 是如何利用 YAML 格式描述 K8s 集群的。 
+1. **声明式**： 声明式的特点就是用户只说明需要最终的状态，至于如何从当前状态到达最终状态，由平台实现。其实就是所谓的 Infrastructure as the code 的概念。 稍后我们会看一下 Tanzu Kubernetes Grid 是如何利用 YAML 格式描述 K8s 集群的。 
 
-2. 用 K8s 管理 K8s：
+2. **用 K8s 管理 K8s**：
 ![cluster-api](./images/cluster-api.png)  
 稍微有点绕。 在 Cluster API 的设计里面，K8s集群分为两类：“管理集群” 和 “工作负载集群” （这个名词在不同的平台上面可能叫法有所区别）。 “工作负载集群”就是通常理解的运行业务应用的集群，在多集群管理的理念下，工作集群通常会有多个。 “管理集群” 也是 K8s 集群，不过它的用途就是管理各个 “工作负载集群” 的生命周期，包括创建、变更、销毁等。 管理集群通常只需要 1 个。 K8s 社区认为，既然 K8s 是个很好的平台管理 Pod、Deployment、Service 这些应用相关资源，那我们也扩展一下，用来管理 K8s 工作负载集群。 
 
-3. 统一的方式：所谓，统一的方式，实际就是制定标准，希望各个平台都可以遵照。 这样用户做事情就比较简单，在异构的平台上采用同样的方式做事情。 事实上，业界的各位大佬也都在列。 https://cluster-api.sigs.k8s.io/reference/providers.html。 Cluster API 当前的版本是 1.2.  按照开源社区的逻辑，1.0 以上的版本就是稳定的，生产就绪的版本了。 不过，这个事情也不是每家都做的很完善，应该说，还在统一的路上。 毕竟，每家都有原本的实现方式，要改起来需要时间。
+3. **统一的方式**：所谓，统一的方式，实际就是制定标准，希望各个平台都可以遵照。 这样用户做事情就比较简单，在异构的平台上采用同样的方式做事情。 事实上，业界的各位大佬也都在列，具体参看 https://cluster-api.sigs.k8s.io/reference/providers.html 。 Cluster API 当前的版本是 1.2.  按照开源社区的逻辑，1.0 以上的版本就是稳定的，生产就绪的版本了。 不过，这个事情也不是每家都做的很完善，应该说，还在统一的路上。 毕竟，每家都有原本的实现方式，要改起来需要时间。
 
 关于 Cluster API，更多的细节可以参看官方网站：https://cluster-api.sigs.k8s.io/
 
 ## 2. Tanzu Kubernets Grid 的 Cluster API 实现
-Tanzu Kubernetes Grid 是 VMware 的 Cluster API 实现。 vSphere 7.0 采用的对应名词：“管理集群” -> "Supervisor Cluster“， ”工作负载集群“ -> "Guest Cluster“。 
+Tanzu Kubernetes Grid 是 VMware 的 Cluster API 实现。 在 vSphere 7.0 中，“管理集群” 被称为 "Supervisor Cluster“， ”工作负载集群“ 为称为 "Guest Cluster“。 
 ![tanzu-svc-guest](./images/Tanzu-SVC-Guest.png)
 
 Supervisor Cluster 通过下面的 YAML 文件描述 Guest Cluster。 这就是标准的 K8s YAML 文件。  这个 sample 拷贝自 vSphere 7.0 的官方文档。这个 sample 是最简单的，很多参数都省略，采用了默认值。 更多的 sample 和完整的参数，可以参看 https://docs.vmware.com/cn/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-4838C85E-398D-4461-9C4E-561FADD42A07.html
@@ -94,7 +93,7 @@ Demo 环境包含一个 vSphere 集群 和 github 的一个 repository，其中
 
 ### 4.1 在Supervisor Cluster 中创建基于 X509 证书，并且通过 RBAC 授权 cluster-admin 的权限
 
-首先要说明一下，Supervisor Cluster 不是一个 CNCF-Conformance 的 K8s 集群，而且通过通常的步骤无法获得集群管理员权限，我们需要通过一些特别的方法，登录到 Supervisor Cluster Control Plane VM 获取最高权限。具体可以参看 https://williamlam.com/2020/10/how-to-ssh-to-tanzu-kubernetes-grid-tkg-cluster-in-vsphere-with-tanzu.html。 参考文中的 Option2 的 Step1 和 Step2。 在登录到 Supervisor Cluster Control Plane VM 的 shell console 之后，我们执行下面的步骤。 **注意，下面的所有的操作都是 Supervisor Cluster Control Plane VM 的 shell console 中。 **
+首先要说明一下，Supervisor Cluster 不是一个 CNCF-Conformance 的 K8s 集群，而且通过通常的步骤无法获得集群管理员权限，我们需要通过一些特别的方法，登录到 Supervisor Cluster Control Plane VM 获取最高权限。具体可以参看 https://williamlam.com/2020/10/how-to-ssh-to-tanzu-kubernetes-grid-tkg-cluster-in-vsphere-with-tanzu.html 。 参考文中的 Option2 的 Step1 和 Step2。 在登录到 Supervisor Cluster Control Plane VM 的 shell console 之后，我们执行下面的步骤。 **注意，下面的所有的操作都是 Supervisor Cluster Control Plane VM 的 shell console 中**。 
 
 #### 4.1.1 通过 openssl 命令创建 argocd-admin 用户的私钥和 CSR
 ``` bash
