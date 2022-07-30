@@ -1,5 +1,14 @@
 # 基于 K8s Cluster API 和 GitOps 的 Tanzu K8s 集群生命周期管理
 
+## 摘要
+本文主要介绍了如何基于 K8s Cluster API，结合 GitOps 的理念，对 Tanzu Kubernetes Clusters 进行生命周期管理。 本文的章节分布如下：
+- 第 1 章介绍了 Kubernetes Cluster API 的概念
+- 第 2 章介绍了 Kubernetes Cluster API 在 Tanzu Kubernetes Grid 产品中的实现
+- 第 3 章介绍了 GitOps 的优势，以及如何应用在 Tanzu Kubernetes Grid 中
+- 第 4 章主要描述了整个实现过程，包括具体的命令和脚本
+
+如果您已经对 Cluster API 或者 GitOps 比较了解，完全可以跳过相关章节。 
+
 ## 1. 为何你需要 Cluster API 去管理 K8s 集群生命周期？
 
 所谓 K8s 集群生命周期管理，简单的说，就是 create, scale, upgrade, destroy。 从传统 IT 资源生命周期管理的视角来看，管理 K8s 集群与管理其他 IT 资源并无特别的差异，无非就是换了一个命令或者一个 Web 用户界面。 Kubeadm 为绝大部分的 K8s 管理平台提供了通用的底层工具，主要用来创建（bootstrap） K8s 集群。 但在日常的运维中，管理员依然会面临如下的一些问题，比如： 1. 如何在异构的 K8s 集群管理平台上，提供一致性的方法去部署 worker nodes，VPC 网络，负载均衡等资源？ 2. 如何实现 K8s 自动化生命周期管理，比如 K8s 版本的升级，节点规格的变更，节点数量的变更等？
